@@ -1,0 +1,17 @@
+version: "1"
+packages:
+    # name of the go-package to be generated
+  - name: "db"
+    # tells sqlc where to store generated-code
+    path: "./db/sqlc/"
+    # tells sqlc where to look for queries
+    queries: "./db/query/"
+    # schema points to migration files
+    schema: "./db/migration/"
+    # database we will be using
+    engine: "postgresql"
+    # tells sqlc to emit json tags with the generated structs
+    emit_json_tags: true
+    emit_prepared_queries: false
+    emit_interface: false
+    emit_exact_table_names: false
