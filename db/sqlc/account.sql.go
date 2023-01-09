@@ -7,34 +7,26 @@ package db
 
 import (
 	"context"
-	"time"
 )
 
 const createAccount = `-- name: CreateAccount :one
 INSERT INTO accounts(
         owner,
         balance,
-        currency,
-        created_at
+        currency
     )
-VALUES ($1, $2, $3, $4)
+VALUES ($1, $2, $3)
 Returning id, owner, balance, currency, created_at
 `
 
 type CreateAccountParams struct {
-	Owner     string    `json:"owner"`
-	Balance   int64     `json:"balance"`
-	Currency  string    `json:"currency"`
-	CreatedAt time.Time `json:"created_at"`
+	Owner    string `json:"owner"`
+	Balance  int64  `json:"balance"`
+	Currency string `json:"currency"`
 }
 
 func (q *Queries) CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error) {
-	row := q.db.QueryRowContext(ctx, createAccount,
-		arg.Owner,
-		arg.Balance,
-		arg.Currency,
-		arg.CreatedAt,
-	)
+	row := q.db.QueryRowContext(ctx, createAccount, arg.Owner, arg.Balance, arg.Currency)
 	var i Account
 	err := row.Scan(
 		&i.ID,

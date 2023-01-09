@@ -2,10 +2,9 @@
 INSERT INTO accounts(
         owner,
         balance,
-        currency,
-        created_at
+        currency
     )
-VALUES ($1, $2, $3, $4)
+VALUES ($1, $2, $3)
 Returning *;
 -- name: GetAccount :one
 SELECT *
