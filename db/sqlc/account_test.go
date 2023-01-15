@@ -62,10 +62,8 @@ func TestUpdateAccount(t *testing.T) {
 	}
 
 	account2, err := testQueries.UpdateAccount(context.Background(), args)
-
 	require.NoError(t, err)
 	require.NotEmpty(t, account2)
-
 	require.Equal(t, account2.Balance, args.Balance)
 	require.Equal(t, account2.CreatedAt, account.CreatedAt)
 	require.Equal(t, account2.Currency, account.Currency)
@@ -75,10 +73,8 @@ func TestUpdateAccount(t *testing.T) {
 
 func TestDeleteAccount(t *testing.T) {
 	account := CreateRandomAccount(t)
-
 	del_account, err := testQueries.DeleteAccount(context.Background(), account.ID)
 	require.NoError(t, err)
-
 	account2, err := testQueries.GetAccount(context.Background(), del_account.ID)
 	require.Error(t, err)
 	require.Empty(t, account2)
@@ -89,18 +85,14 @@ func TestListAccounts(t *testing.T) {
 	for i := 0; i < 5; i++ {
 		CreateRandomAccount(t)
 	}
-
 	args := ListAccountsParams{
 		Limit:  5,
 		Offset: 5,
 	}
-
 	accounts, err := testQueries.ListAccounts(context.Background(), args)
 	require.NoError(t, err)
-
 	// checking if the accounts are not-empty
 	for _, account := range accounts {
 		require.NotEmpty(t, account)
 	}
-
 }
