@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"fmt"
 )
 
 // this struct provides all the functions to execute database queries and transactions..
@@ -49,9 +50,9 @@ func (store *Store) execTx(ctx context.Context, fn func(*Queries) error) error {
 	// checking if there is an error executing callback function..
 	if err != nil {
 		// checking for rollback error..
-		// if there is rollback error return rollback error..
+		// if there is rollback error return rollback error and begintx error..
 		if rbErr := tx.Rollback(); rbErr != nil {
-			return rbErr
+			return fmt.Errorf("tx err: %v rb err: %v", err, rbErr)
 		}
 		// if there is function execution error return that..
 		return err
@@ -93,9 +94,22 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 		// TODO: Update account balance
+		result.FromAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			ID:     arg.FromAccountID,
+			Amount: -arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
+		result.ToAccount, err = q.AddAccountBalance(ctx, AddAccountBalanceParams{
+			ID:     arg.ToAccountID,
+			Amount: arg.Amount,
+		})
+		if err != nil {
+			return err
+		}
 		return nil
 	})
-
 	if err != nil {
 		return result, err
 	}
