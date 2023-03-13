@@ -15,3 +15,5 @@ packages:
     emit_prepared_queries: false
     emit_interface: false
     emit_exact_table_names: false
+    # tell sqlc to emit empty slcies in-case of no results
+    emit_empty_slices: true
